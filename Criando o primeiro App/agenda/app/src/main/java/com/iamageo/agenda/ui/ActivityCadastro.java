@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -11,49 +13,82 @@ import com.iamageo.agenda.R;
 import com.iamageo.agenda.model.Aluno;
 import com.iamageo.agenda.model.AlunoDAO;
 
+import java.io.Serializable;
+
+import static com.iamageo.agenda.ui.Constants.CHAVE_ALUNO;
+
 public class ActivityCadastro extends AppCompatActivity {
 
-
-    private EditText nome;
-    private EditText idade;
-    private Button cadastro_btn;
+    private static final String TITULO_APPBAR_NOVO_ALUNO = "Novo aluno";
+    private static final String TITULO_APPBAR_EDITA_ALUNO = "Edita aluno";
+    private EditText campoNome;
+    private EditText campoIdade;
+    private final AlunoDAO dao = new AlunoDAO();
+    private Aluno aluno;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastro);
-        setTitle("Cadastrar novo aluno");
-
-        final AlunoDAO dao = new AlunoDAO();
-
-        nome = findViewById(R.id.cadastro_nome);
-        idade = findViewById(R.id.cadastro_idade);
-        cadastro_btn = findViewById(R.id.cadastro_btn);
-
-        cadastro_btn.setOnClickListener(v -> {
-            String nome_text;
-            String idade_text;
-
-            nome_text = nome.getText().toString();
-            idade_text = idade.getText().toString();
-
-            Aluno aluno = new Aluno(nome_text, idade_text);
-            dao.save(aluno);
-
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
-
-
-        });
-
-
+        inicializacaoDosCampos();
+        carregaAluno();
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent i = new Intent(this, MainActivity.class);
-        startActivity(i);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater()
+                .inflate(R.menu.salvar_aluno, menu);
+        return super.onCreateOptionsMenu(menu);
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        if(itemId == R.id.activity_formulario_aluno_menu_salvar){
+            finalizaFormulario();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void carregaAluno() {
+        Intent dados = getIntent();
+        if (dados.hasExtra(CHAVE_ALUNO)) {
+            setTitle(TITULO_APPBAR_EDITA_ALUNO);
+            aluno = (Aluno) dados.getSerializableExtra(CHAVE_ALUNO);
+            preencheCampos();
+        } else {
+            setTitle(TITULO_APPBAR_NOVO_ALUNO);
+            aluno = new Aluno();
+        }
+    }
+
+    private void preencheCampos() {
+        campoNome.setText(aluno.getNome());
+        campoIdade.setText(aluno.getIdade());
+    }
+
+    private void finalizaFormulario() {
+        preencheAluno();
+        if (aluno.temIdValido()) {
+            dao.edita(aluno);
+        } else {
+            dao.salva(aluno);
+        }
+        finish();
+    }
+
+    private void inicializacaoDosCampos() {
+        campoNome = findViewById(R.id.cadastro_nome);
+        campoIdade = findViewById(R.id.cadastro_idade);
+    }
+
+    private void preencheAluno() {
+        String nome = campoNome.getText().toString();
+        String idade = campoIdade.getText().toString();
+
+        aluno.setNome(nome);
+        aluno.setIdade(idade);
+    }
+
 
 }

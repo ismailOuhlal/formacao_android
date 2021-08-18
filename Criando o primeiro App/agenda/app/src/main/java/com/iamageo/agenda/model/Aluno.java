@@ -1,12 +1,30 @@
 package com.iamageo.agenda.model;
 
-public class Aluno {
+import androidx.annotation.NonNull;
 
-    String nome;
-    String idade;
+import java.io.Serializable;
+
+public class Aluno implements Serializable {
+
+    private int id = 0;
+    private String nome;
+    private String idade;
 
     public Aluno(String nome, String idade) {
         this.nome = nome;
+        this.idade = idade;
+    }
+
+    public Aluno() {
+
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+
+    public void setIdade(String idade) {
         this.idade = idade;
     }
 
@@ -14,15 +32,26 @@ public class Aluno {
         return nome;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
 
     public String getIdade() {
         return idade;
     }
 
-    public void setIdade(String idade) {
-        this.idade = idade;
+    @NonNull
+    @Override
+    public String toString() {
+        return nome;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public boolean temIdValido() {
+        return id > 0;
     }
 }

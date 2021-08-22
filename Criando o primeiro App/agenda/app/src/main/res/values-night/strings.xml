@@ -2,7 +2,7 @@
 <resources>
     <string name="cadastro_nome">Nome</string>
     <string name="cadastro_idade">Idade</string>
-    <string name="cadastrar_btn">cadastrar</string>
+    <string name="cadastrar">cadastrar</string>
     <string name="list_name">João da silva</string>
     <string name="list_idade">18</string>
 </resources>

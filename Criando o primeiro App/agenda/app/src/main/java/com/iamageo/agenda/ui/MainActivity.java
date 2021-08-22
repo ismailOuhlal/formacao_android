@@ -1,27 +1,21 @@
 package com.iamageo.agenda.ui;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.iamageo.agenda.R;
 import com.iamageo.agenda.adapter.AdapterAluno;
 import com.iamageo.agenda.model.Aluno;
 import com.iamageo.agenda.model.AlunoDAO;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.iamageo.agenda.ui.Constants.CHAVE_ALUNO;
 
 public class MainActivity extends AppCompatActivity {
@@ -37,8 +31,7 @@ public class MainActivity extends AppCompatActivity {
         setTitle(TITULO_APPBAR);
         configuraFabNovoAluno();
         configuraLista();
-        dao.salva(new Aluno("Leticia", "18"));
-        dao.salva(new Aluno("Geovani", "23"));
+
     }
 
     @Override
@@ -49,27 +42,38 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
+    public boolean onContextItemSelected(final MenuItem item) {
 
         int itemId = item.getItemId();
         if (itemId == R.id.activity_lista_alunos_menu_remover) {
-            AdapterView.AdapterContextMenuInfo menuInfo =
-                    (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-            Aluno alunoEscolhido = adapter.getItem(menuInfo.position);
-            remove(alunoEscolhido);
+
+            removeAlunoWithDialog(item);
+
         }
 
         return super.onContextItemSelected(item);
     }
 
+    private void removeAlunoWithDialog(MenuItem item) {
+        new AlertDialog.Builder(
+                this
+        ).setTitle("Remover aluno")
+                .setMessage("Tem certeza que deseja remover o aluno")
+                .setPositiveButton("sim", (dialog, which) -> {
+
+                    AdapterView.AdapterContextMenuInfo menuInfo =
+                            (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+                    Aluno alunoEscolhido = adapter.getItem(menuInfo.position);
+                    remove(alunoEscolhido);
+
+                })
+                .setNegativeButton("não", null)
+                .show();
+    }
+
     private void configuraFabNovoAluno() {
         FloatingActionButton botaoNovoAluno = findViewById(R.id.main_fab);
-        botaoNovoAluno.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                abreFormularioModoInsereAluno();
-            }
-        });
+        botaoNovoAluno.setOnClickListener(view -> abreFormularioModoInsereAluno());
     }
 
     private void abreFormularioModoInsereAluno() {
@@ -100,12 +104,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void configuraListenerDeCliquePorItem(ListView listaDeAlunos) {
-        listaDeAlunos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int posicao, long id) {
-                Aluno alunoEscolhido = (Aluno) adapterView.getItemAtPosition(posicao);
-                abreFormularioModoEditaAluno(alunoEscolhido);
-            }
+        listaDeAlunos.setOnItemClickListener((adapterView, view, posicao, id) -> {
+            Aluno alunoEscolhido = (Aluno) adapterView.getItemAtPosition(posicao);
+            abreFormularioModoEditaAluno(alunoEscolhido);
         });
     }
 

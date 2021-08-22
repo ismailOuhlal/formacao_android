@@ -14,7 +14,7 @@ import java.util.List;
 
 public class AdapterAluno extends ArrayAdapter<Aluno> {
 
-    private Context context_;
+    private final Context context_;
 
     public AdapterAluno(Context context, int layout_id, List<Aluno> alunosList) {
         super(context, layout_id, alunosList);
@@ -33,7 +33,7 @@ public class AdapterAluno extends ArrayAdapter<Aluno> {
             convertView = LayoutInflater.from(context_).inflate(R.layout.list_alunos, parent, false);
         }
 
-        Aluno aluno_da_vez = (Aluno) getItem(position);
+        Aluno aluno_da_vez = getItem(position);
 
         TextView textViewNome = convertView.findViewById(R.id.adapter_aluno_nome);
         TextView textViewIdade = convertView.findViewById(R.id.adapter_aluno_idade);

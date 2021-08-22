@@ -1,19 +1,14 @@
 package com.iamageo.agenda.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.EditText;
-
 import com.iamageo.agenda.R;
 import com.iamageo.agenda.model.Aluno;
 import com.iamageo.agenda.model.AlunoDAO;
-
-import java.io.Serializable;
 
 import static com.iamageo.agenda.ui.Constants.CHAVE_ALUNO;
 

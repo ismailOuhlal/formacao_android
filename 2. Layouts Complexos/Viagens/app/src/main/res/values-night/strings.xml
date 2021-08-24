@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="main_especiais">Especiais</string>
+    <string name="localizacao">Brasil</string>
+    <string name="default_cv">none</string>
+</resources>

@@ -9,6 +9,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Viagens">
+        <activity android:name=".ui.ResumoCompraActivity"
+            android:parentActivityName=".ui.PagamentoActivity"
+            />
+        <activity
+            android:name=".ui.PagamentoActivity"
+            android:parentActivityName=".ui.ResumoActivity" />
+        <activity
+            android:name=".ui.ResumoActivity"
+            android:parentActivityName=".ui.ListaPacotesActivity" />
         <activity android:name=".ui.ListaPacotesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

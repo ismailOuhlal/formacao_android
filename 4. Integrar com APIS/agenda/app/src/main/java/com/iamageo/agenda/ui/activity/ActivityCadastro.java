@@ -1,7 +1,6 @@
 package com.iamageo.agenda.ui.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,10 +8,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import com.iamageo.agenda.R;
+import com.iamageo.agenda.asynctask.EditaAlunoTask;
+import com.iamageo.agenda.asynctask.SalvaAlunoTask;
 import com.iamageo.agenda.database.AgendaDatabase;
 import com.iamageo.agenda.database.RoomAlunoDAO;
 import com.iamageo.agenda.model.Aluno;
-import com.iamageo.agenda.model.AlunoDAO;
 
 import static com.iamageo.agenda.ui.Constants.CHAVE_ALUNO;
 
@@ -68,6 +68,7 @@ public class ActivityCadastro extends AppCompatActivity {
 
     private void preencheCampos() {
         campoNome.setText(aluno.getNome());
+        campoSobrenome.setText(aluno.getSobrenome());
         campoIdade.setText(aluno.getIdade());
         campoTelefone.setText(aluno.getTelefone());
     }
@@ -75,9 +76,9 @@ public class ActivityCadastro extends AppCompatActivity {
     private void finalizaFormulario() {
         preencheAluno();
         if (aluno.temIdValido()) {
-            dao.edita(aluno);
+            new EditaAlunoTask(dao, aluno).execute();
         } else {
-            dao.salva(aluno);
+            new SalvaAlunoTask(dao, aluno).execute();
         }
         finish();
     }

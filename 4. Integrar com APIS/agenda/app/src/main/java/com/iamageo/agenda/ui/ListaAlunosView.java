@@ -10,6 +10,8 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 import com.iamageo.agenda.adapter.AdapterAluno;
+import com.iamageo.agenda.asynctask.BuscaAlunosTask;
+import com.iamageo.agenda.asynctask.RemoveAlunoTask;
 import com.iamageo.agenda.database.AgendaDatabase;
 import com.iamageo.agenda.database.RoomAlunoDAO;
 import com.iamageo.agenda.model.Aluno;
@@ -26,6 +28,7 @@ public class ListaAlunosView {
         this.adapter = new AdapterAluno(this.context);
         AgendaDatabase database = AgendaDatabase.getInstance(context);
         dao = database.getRoomAlunoDAO();
+
 
     }
 
@@ -45,12 +48,14 @@ public class ListaAlunosView {
     }
 
     public void atualizaAlunos() {
-        adapter.atualiza(dao.todos());
+
+        new BuscaAlunosTask(dao, adapter).execute();
+
     }
 
     private void remove(Aluno aluno) {
-        dao.remove(aluno);
-        adapter.remove(aluno);
+        new RemoveAlunoTask(dao, adapter, aluno).execute();
+
     }
 
     public void configuraAdapter(ListView listaDeAlunos) {
